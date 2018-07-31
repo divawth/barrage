@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>弹幕</title>
+  <style>
+    div {
+      text-align: center;
+    }
+    textarea {
+      width: 600px;
+      height: 200px;
+      outline: none;
+      padding: 10px;
+    }
+    button {
+      width: 100px;
+      height: 40px;
+      background: #f90;
+      color: #fff;
+      font-size: 16px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      display: block;
+      margin: 10px auto;
+    }
+    .view {
+      width: 600px;
+      height: 600px;
+      background-color: #000;
+      margin: 10px auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="view">
+  </div>
+  <div>
+    <textarea type="text" name="text"></textarea>
+    <button>
+      发送弹幕
+    </button>
+  </div>
+
+  <script src="https://cdn.bootcss.com/socket.io/2.1.0/socket.io.js"></script>
+  <script>
+    window.onload = function () {
+      var socket = io('/barrage', {
+
+        query: {
+          room: 'demo',
+          userId: `root_${Math.random()}`,
+        },
+
+        transports: ['websocket']
+      });
+
+      document.querySelector('button').onclick = function () {
+        var element = document.querySelector('textarea');
+        var value = element.value;
+        socket.emit('message_receive', {
+          target: 'message',
+          payload: {
+            msg : value,
+          },
+        });
+        element.value = '';
+      }
+    };
+  </script>
+</body>
+</html>
